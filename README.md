@@ -6,6 +6,6 @@
 
 ## About Cyeld
 
-> **Note:** This repository contains the core code of the Cyeld framework. If you want to build an application using Cyeld, visit the main .
+> **Note:** This repository contains the core code of the Cyeld framework.
 
-Cyeld is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Cyeld attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+Cyeld is a framework for deep learning built in python. Cyeld attempts to make the implementation of deep learning easier and faster.
