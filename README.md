@@ -1,4 +1,4 @@
-<div style="width:800px height:10px" align="center">
+<div style="width:800px height:100px" align="center">
     <img  src="./images/logok.jpg" alt="framework-picture">
 </div>
 
