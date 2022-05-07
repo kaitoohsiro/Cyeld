@@ -2,7 +2,7 @@
     <img  src="./images/logo.jpg" alt="framework-picture">
 </div>
 <img src="https://img.shields.io/badge/LISENSE-MIT-green">
-<img src="https://img.shields.io/badge/pypi-v0.0.1-red">
+<a href="https://pypi.org/project/cyeld/0.0.1/"></a><img src="https://img.shields.io/badge/pypi-v0.0.1-red">
 <p></p>
 
 ## About Cyeld
