@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="./images/braintyoko.png" alt="framework-picture">
+    <img src="./images/logol.jpg" alt="framework-picture">
 </div>
 
 <p></p>
