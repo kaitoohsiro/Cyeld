@@ -115,6 +115,9 @@ class Linear(Layer):
 
         y = F.linear(x, self.W, self.b)
         return y
+    
+    def __repr__(self):
+        return 'Linear(' + str(self.out_size) + ')'
 
 
 class Conv2d(Layer):
@@ -164,6 +167,10 @@ class Conv2d(Layer):
 
         y = F.conv2d(x, self.W, self.b, self.stride, self.pad)
         return y
+
+    def __repr__(self):
+        p = 'Conv2d(' + str(self.in_channels) + ',' + str(self.out_channels) + ', kernel_size=' + str(self.kernel_size) + ', stride=' + str(self.stride) + ', pad=' + str(self.pad) + ')'
+        return p
 
 
 class Deconv2d(Layer):

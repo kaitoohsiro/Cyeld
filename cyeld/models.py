@@ -106,11 +106,29 @@ class VGG16(Model):
         if size:
             image = image.resize(size)
         image = np.asarray(image, dtype=dtype)
-        image = image[:, :, ::-1]
+        image = kcx [:, :, ::-1]
         image -= np.array([103.939, 116.779, 123.68], dtype=dtype)
         image = image.transpose((2, 0, 1))
         return image
 
+    def __repr__(self):
+        p = "(0) " + str(self.conv1_1) \
+        + "\n(1) " + str(self.conv1_2) \
+        + "\n(2) " + str(self.conv2_1) \
+        + "\n(3) " + str(self.conv2_2) \
+        + "\n(4) " + str(self.conv3_1) \
+        + "\n(5) " + str(self.conv3_2) \
+        + "\n(6) " + str(self.conv3_3) \
+        + "\n(7) " + str(self.conv4_1) \
+        + "\n(8) " + str(self.conv4_2) \
+        + "\n(9) " + str(self.conv4_3) \
+        + "\n(10) " + str(self.conv5_1) \
+        + "\n(11) " + str(self.conv5_2) \
+        + "\n(12) " + str(self.conv5_3) \
+        + "\n(13) " + str(self.fc6) \
+        + "\n(14) " + str(self.fc7) \
+        + "\n(15) " + str(self.fc8)
+        return p
 
 # =============================================================================
 # ResNet
