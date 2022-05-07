@@ -2,8 +2,8 @@ import os
 import subprocess
 import urllib.request
 import numpy as np
-from cyeld import as_variable
-from cyeld import Variable
+from cyeld import as_Carray
+from cyeld import Carray
 from cyeld import cuda
 
 
@@ -39,12 +39,12 @@ def _dot_func(f):
 def get_dot_graph(output, verbose=True):
     """Generates a graphviz DOT text of a computational graph.
 
-    Build a graph of functions and variables backward-reachable from the
+    Build a graph of functions and Carrays backward-reachable from the
     output. To visualize a graphviz DOT text, you need the dot binary from the
     graphviz package (www.graphviz.org).
 
     Args:
-        output (cyeld.Variable): Output variable from which the graph is
+        output (cyeld.Carray): Output Carray from which the graph is
             constructed.
         verbose (bool): If True the dot graph contains additional information
             such as shapes and dtypes.
@@ -130,14 +130,14 @@ def reshape_sum_backward(gy, x_shape, axis, keepdims):
     """Reshape gradient appropriately for cyeld.functions.sum's backward.
 
     Args:
-        gy (cyeld.Variable): Gradient variable from the output by backprop.
+        gy (cyeld.Carray): Gradient Carray from the output by backprop.
         x_shape (tuple): Shape used at sum function's forward.
         axis (None or int or tuple of ints): Axis used at sum function's
             forward.
         keepdims (bool): Keepdims used at sum function's forward.
 
     Returns:
-        cyeld.Variable: Gradient variable which is reshaped appropriately
+        cyeld.Carray: Gradient Carray which is reshaped appropriately
     """
     ndim = len(x_shape)
     tupled_axis = axis
@@ -193,20 +193,20 @@ def gradient_check(f, x, *args, rtol=1e-4, atol=1e-5, **kwargs):
     tolerance this function return True, otherwise False.
 
     Args:
-        f (callable): A function which gets `Variable`s and returns `Variable`s.
-        x (`ndarray` or `cyeld.Variable`): A traget `Variable` for computing
+        f (callable): A function which gets `Carray`s and returns `Carray`s.
+        x (`ndarray` or `cyeld.Carray`): A traget `Carray` for computing
             the gradient.
-        *args: If `f` needs variables except `x`, you can specify with this
+        *args: If `f` needs Carrays except `x`, you can specify with this
             argument.
         rtol (float): The relative tolerance parameter.
         atol (float): The absolute tolerance parameter.
-        **kwargs: If `f` needs keyword variables, you can specify with this
+        **kwargs: If `f` needs keyword Carrays, you can specify with this
             argument.
 
     Returns:
         bool: Return True if the result is within a tolerance, otherwise False.
     """
-    x = as_variable(x)
+    x = as_Carray(x)
     x.data = x.data.astype(np.float64)
 
     num_grad = numerical_grad(f, x, *args, **kwargs)
@@ -235,12 +235,12 @@ def numerical_grad(f, x, *args, **kwargs):
     """Computes numerical gradient by finite differences.
 
     Args:
-        f (callable): A function which gets `Variable`s and returns `Variable`s.
-        x (`ndarray` or `cyeld.Variable`): A target `Variable` for computing
+        f (callable): A function which gets `Carray`s and returns `Carray`s.
+        x (`ndarray` or `cyeld.Carray`): A target `Carray` for computing
             the gradient.
-        *args: If `f` needs variables except `x`, you can specify with this
+        *args: If `f` needs Carrays except `x`, you can specify with this
             argument.
-        **kwargs: If `f` needs keyword variables, you can specify with this
+        **kwargs: If `f` needs keyword Carrays, you can specify with this
             argument.
 
     Returns:
@@ -248,7 +248,7 @@ def numerical_grad(f, x, *args, **kwargs):
     """
     eps = 1e-4
 
-    x = x.data if isinstance(x, Variable) else x
+    x = x.data if isinstance(x, Carray) else x
     xp = cuda.get_array_module(x)
     if xp is not np:
         np_x = cuda.as_numpy(x)
@@ -263,13 +263,13 @@ def numerical_grad(f, x, *args, **kwargs):
 
         x[idx] = tmp_val + eps
         y1 = f(x, *args, **kwargs)  # f(x+h)
-        if isinstance(y1, Variable):
+        if isinstance(y1, Carray):
             y1 = y1.data
         y1 = y1.copy()
 
         x[idx] = tmp_val - eps
         y2 = f(x, *args, **kwargs)  # f(x-h)
-        if isinstance(y2, Variable):
+        if isinstance(y2, Carray):
             y2 = y2.data
         y2 = y2.copy()
 
@@ -285,24 +285,24 @@ def array_equal(a, b):
     """True if two arrays have the same shape and elements, False otherwise.
 
     Args:
-        a, b (numpy.ndarray or cupy.ndarray or cyeld.Variable): input arrays
+        a, b (numpy.ndarray or cupy.ndarray or cyeld.Carray): input arrays
             to compare
 
     Returns:
         bool: True if the two arrays are equal.
     """
-    a = a.data if isinstance(a, Variable) else a
-    b = b.data if isinstance(b, Variable) else b
+    a = a.data if isinstance(a, Carray) else a
+    b = b.data if isinstance(b, Carray) else b
     a, b = cuda.as_numpy(a), cuda.as_numpy(b)
     return np.array_equal(a, b)
 
 
 def array_allclose(a, b, rtol=1e-4, atol=1e-5):
-    """Returns True if two arrays(or variables) are element-wise equal within a
+    """Returns True if two arrays(or Carrays) are element-wise equal within a
     tolerance.
 
     Args:
-        a, b (numpy.ndarray or cupy.ndarray or cyeld.Variable): input arrays
+        a, b (numpy.ndarray or cupy.ndarray or cyeld.Carray): input arrays
             to compare
         rtol (float): The relative tolerance parameter.
         atol (float): The absolute tolerance parameter.
@@ -311,8 +311,8 @@ def array_allclose(a, b, rtol=1e-4, atol=1e-5):
         bool: True if the two arrays are equal within the given tolerance,
             False otherwise.
     """
-    a = a.data if isinstance(a, Variable) else a
-    b = b.data if isinstance(b, Variable) else b
+    a = a.data if isinstance(a, Carray) else a
+    b = b.data if isinstance(b, Carray) else b
     a, b = cuda.as_numpy(a), cuda.as_numpy(b)
     return np.allclose(a, b, atol=atol, rtol=rtol)
 

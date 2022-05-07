@@ -1,6 +1,6 @@
 import numpy as np
 from cyeld import cuda
-from cyeld.core import Function, as_variable
+from cyeld.core import Function, as_Carray
 from cyeld.utils import pair, get_conv_outsize, get_deconv_outsize
 from cyeld.functions import linear, broadcast_to
 
@@ -9,7 +9,7 @@ from cyeld.functions import linear, broadcast_to
 # [simple version] conv2d_simple / pooling_simple
 # =============================================================================
 def conv2d_simple(x, W, b=None, stride=1, pad=0):
-    x, W = as_variable(x), as_variable(W)
+    x, W = as_Carray(x), as_Carray(W)
 
     Weight = W
     N, C, H, W = x.shape
@@ -27,7 +27,7 @@ def conv2d_simple(x, W, b=None, stride=1, pad=0):
 
 
 def pooling_simple(x, kernel_size, stride=1, pad=0):
-    x = as_variable(x)
+    x = as_Carray(x)
 
     N, C, H, W = x.shape
     KH, KW = pair(kernel_size)
@@ -304,7 +304,7 @@ def im2col(x, kernel_size, stride=1, pad=0, to_matrix=True):
     """Extract patches from an image based on the filter.
 
     Args:
-        x (`cyeld.Variable` or `ndarray`): Input variable of shape
+        x (`cyeld.Carray` or `ndarray`): Input Carray of shape
             `(N, C, H, W)`
         kernel_size (int or (int, int)): Size of kernel.
         stride (int or (int, int)): Stride of kernel.
@@ -313,7 +313,7 @@ def im2col(x, kernel_size, stride=1, pad=0, to_matrix=True):
             shape is `(N*OH*OW, C*KH*KW)`
 
     Returns:
-        `cyeld.Variable`: Output variable. If the `to_matrix` is False, the
+        `cyeld.Carray`: Output Carray. If the `to_matrix` is False, the
             output shape is `(N, C, KH, KW, OH, OW)`, otherwise
             `(N*OH*OW, C*KH*KW)`.
 

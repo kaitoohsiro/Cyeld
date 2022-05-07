@@ -25,9 +25,9 @@ def no_grad():
 
 
 # =============================================================================
-# Variable / Function
+# Carray / Function
 # =============================================================================
-class Variable:
+class Carray:
     __array_priority__ = 200
 
     def __init__(self, data, name=None):
@@ -62,9 +62,9 @@ class Variable:
 
     def __repr__(self):
         if self.data is None:
-            return 'variable(None)'
+            return 'Carray(None)'
         p = str(self.data).replace('\n', '\n' + ' ' * 9)
-        return 'variable(' + p + ')'
+        return 'Carray(' + p + ')'
 
     def set_creator(self, func):
         self.creator = func
@@ -109,10 +109,10 @@ class Variable:
                     y().grad = None  # y is weakref
 
 
-def as_variable(obj):
-    if isinstance(obj, Variable):
+def as_Carray(obj):
+    if isinstance(obj, Carray):
         return obj
-    return Variable(obj)
+    return Carray(obj)
 
 
 def as_array(x):
@@ -123,13 +123,13 @@ def as_array(x):
 
 class Function:
     def __call__(self, *inputs):
-        inputs = [as_variable(x) for x in inputs]
+        inputs = [as_Carray(x) for x in inputs]
 
         xs = [x.data for x in inputs]
         ys = self.forward(*xs)
         if not isinstance(ys, tuple):
             ys = (ys,)
-        outputs = [Variable(as_array(y)) for y in ys]
+        outputs = [Carray(as_array(y)) for y in ys]
 
         if Config.enable_backprop:
             self.generation = max([x.generation for x in inputs])
@@ -252,14 +252,14 @@ def pow(x, c):
     return Pow(c)(x)
 
 
-def setup_variable():
-    Variable.__add__ = add
-    Variable.__radd__ = add
-    Variable.__mul__ = mul
-    Variable.__rmul__ = mul
-    Variable.__neg__ = neg
-    Variable.__sub__ = sub
-    Variable.__rsub__ = rsub
-    Variable.__truediv__ = div
-    Variable.__rtruediv__ = rdiv
-    Variable.__pow__ = pow
+def setup_Carray():
+    Carray.__add__ = add
+    Carray.__radd__ = add
+    Carray.__mul__ = mul
+    Carray.__rmul__ = mul
+    Carray.__neg__ = neg
+    Carray.__sub__ = sub
+    Carray.__rsub__ = rsub
+    Carray.__truediv__ = div
+    Carray.__rtruediv__ = rdiv
+    Carray.__pow__ = pow

@@ -5,20 +5,20 @@ try:
     cupy = cp
 except ImportError:
     gpu_enable = False
-from cyeld import Variable
+from cyeld import Carray
 
 
 def get_array_module(x):
     """Returns the array module for `x`.
 
     Args:
-        x (cyeld.Variable or numpy.ndarray or cupy.ndarray): Values to
+        x (cyeld.Carray or numpy.ndarray or cupy.ndarray): Values to
             determine whether NumPy or CuPy should be used.
 
     Returns:
         module: `cupy` or `numpy` is returned based on the argument.
     """
-    if isinstance(x, Variable):
+    if isinstance(x, Carray):
         x = x.data
 
     if not gpu_enable:
@@ -36,7 +36,7 @@ def as_numpy(x):
     Returns:
         `numpy.ndarray`: Converted array.
     """
-    if isinstance(x, Variable):
+    if isinstance(x, Carray):
         x = x.data
 
     if np.isscalar(x):
@@ -55,7 +55,7 @@ def as_cupy(x):
     Returns:
         `cupy.ndarray`: Converted array.
     """
-    if isinstance(x, Variable):
+    if isinstance(x, Carray):
         x = x.data
 
     if not gpu_enable:

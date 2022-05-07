@@ -30,7 +30,7 @@ def test_mode():
     return using_config('train', False)
 
 # =============================================================================
-# Variable / Function
+# Carray / Function
 # =============================================================================
 try:
     import cupy
@@ -39,7 +39,7 @@ except ImportError:
     array_types = (np.ndarray)
 
 
-class Variable:
+class Carray:
     __array_priority__ = 200
 
     def __init__(self, data, name=None):
@@ -74,9 +74,9 @@ class Variable:
 
     def __repr__(self):
         if self.data is None:
-            return 'variable(None)'
+            return 'Carray(None)'
         p = str(self.data).replace('\n', '\n' + ' ' * 9)
-        return 'variable(' + p + ')'
+        return 'Carray(' + p + ')'
 
     def set_creator(self, func):
         self.creator = func
@@ -91,7 +91,7 @@ class Variable:
     def backward(self, retain_grad=False, create_graph=False):
         if self.grad is None:
             xp = cyeld.cuda.get_array_module(self.data)
-            self.grad = Variable(xp.ones_like(self.data))
+            self.grad = Carray(xp.ones_like(self.data))
 
         funcs = []
         seen_set = set()
@@ -164,14 +164,14 @@ class Variable:
             self.data = cyeld.cuda.as_cupy(self.data)
 
 
-class Parameter(Variable):
+class Parameter(Carray):
     pass
 
 
-def as_variable(obj):
-    if isinstance(obj, Variable):
+def as_Carray(obj):
+    if isinstance(obj, Carray):
         return obj
-    return Variable(obj)
+    return Carray(obj)
 
 
 def as_array(x, array_module=np):
@@ -182,13 +182,13 @@ def as_array(x, array_module=np):
 
 class Function:
     def __call__(self, *inputs):
-        inputs = [as_variable(x) for x in inputs]
+        inputs = [as_Carray(x) for x in inputs]
 
         xs = [x.data for x in inputs]
         ys = self.forward(*xs)
         if not isinstance(ys, tuple):
             ys = (ys,)
-        outputs = [Variable(as_array(y)) for y in ys]
+        outputs = [Carray(as_array(y)) for y in ys]
 
         if Config.enable_backprop:
             self.generation = max([x.generation for x in inputs])
@@ -329,20 +329,20 @@ def pow(x, c):
     return Pow(c)(x)
 
 
-def setup_variable():
-    Variable.__add__ = add
-    Variable.__radd__ = add
-    Variable.__mul__ = mul
-    Variable.__rmul__ = mul
-    Variable.__neg__ = neg
-    Variable.__sub__ = sub
-    Variable.__rsub__ = rsub
-    Variable.__truediv__ = div
-    Variable.__rtruediv__ = rdiv
-    Variable.__pow__ = pow
-    Variable.__getitem__ = cyeld.functions.get_item
+def setup_Carray():
+    Carray.__add__ = add
+    Carray.__radd__ = add
+    Carray.__mul__ = mul
+    Carray.__rmul__ = mul
+    Carray.__neg__ = neg
+    Carray.__sub__ = sub
+    Carray.__rsub__ = rsub
+    Carray.__truediv__ = div
+    Carray.__rtruediv__ = rdiv
+    Carray.__pow__ = pow
+    Carray.__getitem__ = cyeld.functions.get_item
 
-    Variable.matmul = cyeld.functions.matmul
-    Variable.dot = cyeld.functions.matmul
-    Variable.max = cyeld.functions.max
-    Variable.min = cyeld.functions.min
+    Carray.matmul = cyeld.functions.matmul
+    Carray.dot = cyeld.functions.matmul
+    Carray.max = cyeld.functions.max
+    Carray.min = cyeld.functions.min

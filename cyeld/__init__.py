@@ -4,24 +4,24 @@ is_simple_core = False  # True
 # =============================================================================
 
 if is_simple_core:
-    from cyeld.core_simple import Variable
+    from cyeld.core_simple import Carray
     from cyeld.core_simple import Function
     from cyeld.core_simple import using_config
     from cyeld.core_simple import no_grad
     from cyeld.core_simple import as_array
-    from cyeld.core_simple import as_variable
-    from cyeld.core_simple import setup_variable
+    from cyeld.core_simple import as_Carray
+    from cyeld.core_simple import setup_Carray
 
 else:
-    from cyeld.core import Variable
+    from cyeld.core import Carray
     from cyeld.core import Parameter
     from cyeld.core import Function
     from cyeld.core import using_config
     from cyeld.core import no_grad
     from cyeld.core import test_mode
     from cyeld.core import as_array
-    from cyeld.core import as_variable
-    from cyeld.core import setup_variable
+    from cyeld.core import as_Carray
+    from cyeld.core import setup_Carray
     from cyeld.core import Config
     from cyeld.layers import Layer
     from cyeld.models import Model
@@ -39,5 +39,5 @@ else:
     import cyeld.cuda
     import cyeld.transforms
 
-setup_variable()
-__version__ = '0.0.13'
+setup_Carray()
+__version__ = '0.0.1'

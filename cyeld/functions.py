@@ -1,7 +1,7 @@
 import numpy as np
 import cyeld
 from cyeld import cuda, utils
-from cyeld.core import Function, Variable, as_variable, as_array
+from cyeld.core import Function, Carray, as_Carray, as_array
 
 
 # =============================================================================
@@ -105,7 +105,7 @@ class Reshape(Function):
 
 def reshape(x, shape):
     if x.shape == shape:
-        return as_variable(x)
+        return as_Carray(x)
     return Reshape(shape)(x)
 
 
@@ -169,7 +169,7 @@ def get_item(x, slices):
 
 
 def expand_dims(x, axis):
-    x = as_variable(x)
+    x = as_Carray(x)
     shape = list(x.shape)
     shape.insert(axis, 1)
     return reshape(x, tuple(shape))
@@ -220,7 +220,7 @@ class SumTo(Function):
 
 def sum_to(x, shape):
     if x.shape == shape:
-        return as_variable(x)
+        return as_Carray(x)
     return SumTo(shape)(x)
 
 
@@ -241,12 +241,12 @@ class BroadcastTo(Function):
 
 def broadcast_to(x, shape):
     if x.shape == shape:
-        return as_variable(x)
+        return as_Carray(x)
     return BroadcastTo(shape)(x)
 
 
 def average(x, axis=None, keepdims=False):
-    x = as_variable(x)
+    x = as_Carray(x)
     y = sum(x, axis, keepdims)
     return y * (y.data.size / x.data.size)
 
@@ -303,7 +303,7 @@ def linear_simple(x, W, b=None):
 # activation function: sigmoid / relu / softmax / log_softmax / leaky_relu
 # =============================================================================
 def sigmoid_simple(x):
-    x = as_variable(x)
+    x = as_Carray(x)
     y = 1 / (1 + exp(-x))
     return y
 
@@ -343,7 +343,7 @@ def relu(x):
 
 
 def softmax_simple(x, axis=1):
-    x = as_variable(x)
+    x = as_Carray(x)
     y = exp(x)
     sum_y = sum(y, axis=axis, keepdims=True)
     return y / sum_y
@@ -416,7 +416,7 @@ def leaky_relu(x, slope=0.2):
 # loss function: mean_squared_error / softmax_cross_entropy / sigmoid_cross_entropy / binary_cross_entropy
 # =============================================================================
 def mean_squared_error_simple(x0, x1):
-    x0, x1 = as_variable(x0), as_variable(x1)
+    x0, x1 = as_Carray(x0), as_Carray(x1)
     diff = x0 - x1
     y = sum(diff ** 2) / len(diff)
     return y
@@ -441,7 +441,7 @@ def mean_squared_error(x0, x1):
 
 
 def softmax_cross_entropy_simple(x, t):
-    x, t = as_variable(x), as_variable(t)
+    x, t = as_Carray(x), as_Carray(t)
     N = x.shape[0]
     p = softmax(x)
     p = clip(p, 1e-15, 1.0)  # To avoid log(0)
@@ -480,7 +480,7 @@ def softmax_cross_entropy(x, t):
 def sigmoid_cross_entropy(x, t):
     if x.ndim != t.ndim:
         t = t.reshape(*x.shape)
-    x, t = as_variable(x), as_variable(t)
+    x, t = as_Carray(x), as_Carray(t)
     N = len(x)
     p = sigmoid(x)
     p = clip(p, 1e-15, 1.0)
@@ -506,16 +506,16 @@ def accuracy(y, t):
     """
     [WAR] This function is not differentiable.
     """
-    y, t = as_variable(y), as_variable(t)
+    y, t = as_Carray(y), as_Carray(t)
 
     pred = y.data.argmax(axis=1).reshape(t.shape)
     result = (pred == t.data)
     acc = result.mean()
-    return Variable(as_array(acc))
+    return Carray(as_array(acc))
 
 
 def dropout(x, dropout_ratio=0.5):
-    x = as_variable(x)
+    x = as_Carray(x)
 
     if cyeld.Config.train:
         xp = cuda.get_array_module(x)
