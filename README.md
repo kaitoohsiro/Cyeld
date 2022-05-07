@@ -1,5 +1,5 @@
 <div style="width:800px height:100px" align="center">
-    <img  src="./images/logol.jpg" alt="framework-picture">
+    <img  src="./images/logok.jpg" alt="framework-picture">
 </div>
 
 <p></p>
