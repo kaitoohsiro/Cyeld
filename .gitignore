@@ -1,2 +1,7 @@
 /steps
 /cyeld/__pycache__
+/build
+/dist
+/cyeld.egg-info
+
+setup.py

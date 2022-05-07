@@ -9,3 +9,18 @@
 > **Note:** This repository contains the core code of the Cyeld framework.
 
 Cyeld is a framework for deep learning built in python. Cyeld attempts to make the implementation of deep learning easier and faster.
+
+## Usage
+>comming soon
+## Install
+
+```
+pip install cyeld
+```
+
+## Prerequisite
+- [python 3](https://www.python.org/)
+- [Matplotlib](https://matplotlib.org/)
+
+- cpu:  [numpy](https://numpy.org/)
+- gpu:  [cupy](https://docs.cupy.dev/en/stable/index.html)
