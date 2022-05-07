@@ -1,7 +1,8 @@
 <div style="width:800px height:100px" align="center">
     <img  src="./images/logo.jpg" alt="framework-picture">
 </div>
-
+<img src="https://img.shields.io/badge/LISENSE-MIT-green">
+<img src="https://img.shields.io/badge/pypi-v0.0.1-red">
 <p></p>
 
 ## About Cyeld
