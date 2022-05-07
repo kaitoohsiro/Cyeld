@@ -1,9 +1,10 @@
 <div style="width:800px height:100px" align="center">
     <img  src="./images/logo.jpg" alt="framework-picture">
 </div>
-<img src="https://img.shields.io/badge/LISENSE-MIT-green">
-<a href="https://pypi.org/project/cyeld/0.0.1/"></a><img src="https://img.shields.io/badge/pypi-v0.0.1-red">
-<p></p>
+<p>
+    <img src="https://img.shields.io/badge/LISENSE-MIT-green">
+    <a href="https://pypi.org/project/cyeld/0.0.1/"></a><img src="https://img.shields.io/badge/pypi-v0.0.1-red">
+</p>
 
 ## About Cyeld
 
